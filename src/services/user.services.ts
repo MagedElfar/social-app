@@ -5,9 +5,9 @@ export default class UserServices{
     
     private _repository:UserRepository = new UserRepository();
 
-    async findAllUsers(query:Partial<IUser>):Promise<IUser []> {
+    async findAllUsers(search:string ,  limit:number , offset:number):Promise<IUser []> {
         try {
-            let users:IUser [] = await this._repository.findMany(query);
+            let users:IUser [] = await this._repository.findMany({} , {limit , offset} , search);
 
             users = users.map((user:IUser) => {
                 const item:Omit<IUser , "password"> = user

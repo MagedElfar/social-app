@@ -17,13 +17,9 @@ export default class UserController extends Controller{
     async getUsersHandler(req:Request , res:Response , next:NextFunction) :  Promise<void> {
         try {
 
-            const {username = "" , last_name = "" , first_name = ""} = req.query
+            const {search = "" , limit = 10 , offset = 1} = req.query
 
-            const users:IUser [] = await this.userServices.findAllUsers({
-                username:username.toString() , 
-                last_name: last_name.toString() , 
-                first_name: first_name.toString()
-            })
+            const users:IUser [] = await this.userServices.findAllUsers(search.toString() , +limit , +offset)
 
             super.setResponseSuccess({res , status:200 , data:{users}})
         } catch (error) {

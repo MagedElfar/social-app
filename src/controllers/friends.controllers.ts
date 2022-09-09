@@ -13,6 +13,33 @@ export default class FriendsController extends Controller{
         super(path) 
     }
 
+    async getFriendsHandler(req:Request , res:Response , next:NextFunction) :  Promise<void> {
+        try {
+
+            const {search = "" , limit = 10 , offset = 1} = req.query
+
+            const {status = "accepted"} = req.query
+
+            const friends:IFriend[] = await this.services.getFriends(
+                status.toString() ,
+                req.user?.id!,
+                search.toString() , 
+                +limit ,
+                +offset
+            )
+
+            super.setResponseSuccess({
+                res, 
+                status:200,
+                data:{
+                    friends
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+
     async addFriendHandler(req:Request , res:Response , next:NextFunction) :  Promise<void> {
         try {
 

@@ -7,6 +7,7 @@ export const up = function (knex:any) {
             table.enu("status", ["pending", "accepted", "rejected"]).defaultTo("pending");
             table.foreign("user_1").references("id").inTable("users").onUpdate("CASCADE").onDelete("CASCADE");
             table.foreign("user_2").references("id").inTable("users").onUpdate("CASCADE").onDelete("CASCADE");
+            table.timestamps(true, true);
         })
         .then(console.log("table are created"));
     };

@@ -13,7 +13,7 @@ interface IWrite<T>{
 }
 
 interface IRead<T>{
-    findMany:  (query: Partial<T> , option:Options) => Promise<T[]>;
+    findMany:  (query: Partial<T> , option:Options ,search?:string) => Promise<T[]>;
     findOne: (query: Partial<T>) => Promise<T>;
     checkData: (query:Partial<T> , id:number) => Promise<T>
 }
@@ -23,7 +23,7 @@ export default abstract class DBRepository <T> implements IRead<T> , IWrite<T>  
 
     protected abstract db:any;
 
-    abstract findMany(query: Partial<T> , option:Options):Promise<T[]>;
+    abstract findMany(query: Partial<T> , option:Options , search?:string):Promise<T[]>;
 
     abstract findOne(query: Partial<T>):Promise<T>;
 

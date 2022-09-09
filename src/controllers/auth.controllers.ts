@@ -62,8 +62,6 @@ export default class AuthController extends Controller{
 
             const refreshToken = req.refreshToken!
 
-            console.log(refreshToken)
-
             const tokens = await this.authServices.refreshToken(refreshToken)
 
             res.cookie("refreshToken" , tokens.refreshToken ,  config.cookie.option)

@@ -3,7 +3,7 @@ import {Request , Response , NextFunction} from "express"
 
 //signup validation
 const signupValidation = [
-    check("username").toLowerCase().not().isEmpty().withMessage("username is required").custom(value => !/\d/.test(value)).withMessage('Name Must not contain numbers'),
+    check("username").toLowerCase().not().isEmpty().withMessage("username is required"),
     
     check("email").not().isEmpty().isEmail().withMessage("Invalid Email Provided"),
     

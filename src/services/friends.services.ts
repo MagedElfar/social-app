@@ -14,6 +14,21 @@ export default class FriendRequestServices{
             throw error
         }
     }
+
+    async getFriends(
+        status:string , userId:number , search:string , limit:number , offset:number
+        ):Promise<IFriend []> {
+        try {
+            const friends = await this._repository.findMany({
+                status,
+                user_1:userId,
+            } , {limit , offset} , search)
+
+            return friends;
+        } catch (error) {
+            throw error
+        }
+    }
     
 
     async addFriend(data: IFriend):Promise<IFriend>{

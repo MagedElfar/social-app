@@ -20,29 +20,17 @@ export class UserRepository extends BaseRepository<IUser>{
         super('users')
     }
 
-    async findMany(query?: Partial<IUser>, option: Options = {limit: 10 , offset: 1}): Promise<IUser[]> {
+    async findMany(query?: Partial<IUser>, option?: Options , search:string = ""): Promise<IUser[]> {
         try {
-            let users = this.db("users")
-            .limit(option.limit!)
-            .offset(option.offset! - 1)
+            let users = await this.db("users")
+            .where("username" , "like" , `%${search}%`)
+            .orWhere("first_name" , "like" , `%${search}%`)
+            .orWhere("last_name" , "like" , `%${search}%`)
+            .limit(option?.limit!)
+            .offset((option?.offset! - 1) * option?.limit!)
             .select()
 
-            if(query?.username) {
-                users.where("username" , "like" , `%${query.username}%`)
-            }
-
-            if(query?.first_name) {
-                users.orWhere("first_name" , "like" , `%${query.first_name}%`)
-            }
-
-            if(query?.last_name) {
-                users.orWhere("first_name" , "like" , `%${query.last_name}%`)
-            }
-
-            // users = await users
-
-            console.log("test")
-            return await users
+            return users
 
         } catch (error) {
             throw error
