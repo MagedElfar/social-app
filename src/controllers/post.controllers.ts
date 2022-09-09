@@ -26,4 +26,20 @@ export default class PostController extends Controller{
             return next(error)
         }
     }
+
+    async getPostsHandler(req:Request , res:Response , next:NextFunction) {
+        const {friends = "false" , limit = 10 , offset = 1} = req.query
+
+        try {
+            const posts = await this.services.getPosts(req.user?.id! , {
+                friends: friends.toString() , 
+                limit: +limit , 
+                offset: +offset})
+
+            super.setResponseSuccess({res , status:200 , data:{posts}})
+
+        } catch (error) {
+            return next(error)
+        }
+    } 
 } 

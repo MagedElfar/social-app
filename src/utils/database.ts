@@ -2,7 +2,8 @@ export interface Options{
     limit?: number,
     offset?: number,
     from?:string,
-    to?:string
+    to?:string,
+    others?: any []
 }
 
 interface IWrite<T>{

@@ -15,4 +15,15 @@ export default class PostServices{
         }
     }
 
+    async getPosts(user:number , {friends , limit , offset}:{friends:string , limit:number , offset:number}) {
+        try {
+            
+            const posts = await this._repository.findMany({user} , {limit , offset , others: [friends]});
+
+            return posts
+        } catch (error) {
+            throw error
+        }
+    }
+
 }

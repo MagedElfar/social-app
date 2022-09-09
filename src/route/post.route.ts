@@ -10,6 +10,13 @@ const routes: (controller:Controller) => APIRoute [] = (controller:any) => {
             localMiddleware:[],
             auth:true
         },
+        {
+            path: "/",
+            method: Methods.GET,
+            handler: controller.getPostsHandler,
+            localMiddleware:[],
+            auth:true
+        },
     ]
     return r;
 }

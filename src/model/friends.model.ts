@@ -25,7 +25,7 @@ export class FriendsRepository extends BaseRepository<IFriend>{
         try {
             let friends = this.db("friends as f")
             .leftJoin("users as u1" , "u1.id" , "=" , "f.user_1")
-            .select("f.id" , "u1.username as username" , "u1.first_name as first_name" , "u1.last_name as last_name")
+            .select("f.id" ,  "f.user_1  as user" , "u1.username as username" , "u1.first_name as first_name" , "u1.last_name as last_name")
             .where({status: query?.status , user_2:query?.user_1})
             .where(function() {
                 this.where("username" , "like" , `%${search}%`)
@@ -39,13 +39,11 @@ export class FriendsRepository extends BaseRepository<IFriend>{
                     this.db("friends as f2")
                     .where({status: query?.status , user_1:query?.user_1})
                     .leftJoin("users as u2" , "u2.id" , "=" , "f2.user_2")
-                    .select("f2.id" , "u2.username as username" , "u2.first_name as first_name" , "u2.last_name as last_name")
+                    .select("f2.id" , "f2.user_2  as user" , "u2.username as username" , "u2.first_name as first_name" , "u2.last_name as last_name")
                     .where(function() {
                         this.where("username" , "like" , `%${search}%`)
                         .orWhere("first_name" , "like" , `%${search}%`)
                         .orWhere("last_name" , "like" , `%${search}%`)
-                            
-                        
                     })
                 )
             }
