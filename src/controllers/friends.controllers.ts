@@ -67,4 +67,16 @@ export default class FriendsController extends Controller{
             next (error)
         }
     }
+
+    async deleteRequestHandler(req:Request , res:Response , next:NextFunction) {
+        try {
+
+            await this.services.deleteFriendRequest(+req.params.id , req.user?.id!)
+
+            super.setResponseSuccess({res , status:200 , message:'friend request is deleted'})
+
+        } catch (error) {
+            next (error)
+        }
+    }
 } 

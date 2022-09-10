@@ -75,5 +75,19 @@ export default class FriendRequestServices{
         }
     }
 
+    async deleteFriendRequest(id:number , userId:number) {
+        try {
+            const req = await this._repository.findOne({id});
+
+            if(!req) throw setError(404 , "not found")
+
+            if(req.user_2 !== userId && req.user_1 !== userId) throw setError(403 , "Forbidden")
+ 
+            await this._repository.deleteOne({id})
+
+        } catch (error) {
+            throw error
+        }
+    }
 
 }

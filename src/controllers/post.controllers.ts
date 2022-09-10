@@ -42,4 +42,41 @@ export default class PostController extends Controller{
             return next(error)
         }
     } 
+
+    async getPostHandler(req:Request , res:Response , next:NextFunction) {
+
+        try {
+            const post = await this.services.getPost(+req.params.id! , +req.user?.id!)
+
+            super.setResponseSuccess({res , status:200 , data:{post}})
+
+        } catch (error) {
+            return next(error)
+        }
+    } 
+
+    async updatePostHandler(req:Request , res:Response , next:NextFunction) {
+
+        try {
+            await this.services.updatePost(+req.params.id! , +req.user?.id! , req.body.content)
+
+            super.setResponseSuccess({res , status:200 , message:"post is updated"})
+
+        } catch (error) {
+            return next(error)
+        }
+    } 
+
+    async deletePostHandler(req:Request , res:Response , next:NextFunction) {
+
+        try {
+            await this.services.deletePost(+req.params.id! , +req.user?.id!)
+
+            super.setResponseSuccess({res , status:200 , message:"post is deleted"})
+
+        } catch (error) {
+            return next(error)
+        }
+    } 
+
 } 

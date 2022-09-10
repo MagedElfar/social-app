@@ -44,9 +44,10 @@ export class PostRepository extends BaseRepository<IPost>{
     }
     async findOne(query: any): Promise<IPost> {
         try {
-            const post = await this.db("posts as  p").where({"p.id": query?.id!})
+            const post = await this.db("posts as  p")
             .leftJoin("users as u" , "u.id" , "=" , "p.user")
             .select("p.*" , "u.username" , "u.first_name" , "u.last_name" , "u.user_img")
+            .where({"p.id": query?.id!})
             .first()
 
             return post

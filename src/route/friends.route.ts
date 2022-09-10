@@ -24,6 +24,13 @@ const routes: (controller:Controller) => APIRoute [] = (controller:any) => {
             handler: controller.friendRequestUpdateHandler,
             localMiddleware:[updateFriendRequest , isValidate],
             auth:true
+        },
+        {
+            path: "/:id",
+            method: Methods.DELETE,
+            handler: controller.deleteRequestHandler,
+            localMiddleware:[],
+            auth:true
         }
     ]
     return r;

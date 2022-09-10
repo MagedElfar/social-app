@@ -35,6 +35,10 @@ const updateFriendRequest = [
     check("status").toLowerCase().matches(/\b(?:accepted|rejected)\b/).withMessage('Invalid value'),
 ]
 
+const postValidation = [
+    check("content").not().isEmpty().withMessage("content is required"),
+]
+
 
 //check validation
 const isValidate = (req:Request , res:Response , next:NextFunction) => {
@@ -64,5 +68,6 @@ export {
     signupValidation , 
     loginValidation , 
     updateUserValidation,
-    updateFriendRequest
+    updateFriendRequest,
+    postValidation
 }  

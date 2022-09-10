@@ -26,4 +26,49 @@ export default class PostServices{
         }
     }
 
+    async getPost(id:number , user:number):Promise<IPost> {
+        try {
+            
+            const post = await this._repository.findOne({id , user});
+
+            if(post?.user !== user) 
+                throw setError(403 , "post not found or not has a permission for this process")
+
+            return post
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async updatePost(id:number , user:number , content:string):Promise<void> {
+        try {
+            
+            const post = await this._repository.findOne({id , user});
+
+            if(post?.user !== user) 
+                throw setError(403 , "post not found or not has a permission for this process")
+
+            await this._repository.update(id , {content})
+
+            return;
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async deletePost(id:number , user:number):Promise<void> {
+        try {
+            
+            const post = await this._repository.findOne({id , user});
+
+            if(post?.user !== user) 
+                throw setError(403 , "post not found or not has a permission for this process")
+
+            await this._repository.deleteOne({id})
+
+            return;
+        } catch (error) {
+            throw error
+        }
+    }
 }
