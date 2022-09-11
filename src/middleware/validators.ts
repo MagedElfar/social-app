@@ -39,6 +39,12 @@ const postValidation = [
     check("content").not().isEmpty().withMessage("content is required"),
 ]
 
+//add friend validation
+const likeValidation = [    
+    check('post').isInt().withMessage("post should be integer"),
+]
+
+
 
 //check validation
 const isValidate = (req:Request , res:Response , next:NextFunction) => {
@@ -69,5 +75,6 @@ export {
     loginValidation , 
     updateUserValidation,
     updateFriendRequest,
-    postValidation
+    postValidation,
+    likeValidation
 }  

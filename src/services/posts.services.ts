@@ -43,7 +43,7 @@ export default class PostServices{
     async updatePost(id:number , user:number , content:string):Promise<void> {
         try {
             
-            const post = await this._repository.findOne({id , user});
+            const post = await this._repository.findOne({id});
 
             if(post?.user !== user) 
                 throw setError(403 , "post not found or not has a permission for this process")
@@ -59,7 +59,7 @@ export default class PostServices{
     async deletePost(id:number , user:number):Promise<void> {
         try {
             
-            const post = await this._repository.findOne({id , user});
+            const post = await this._repository.findOne({id});
 
             if(post?.user !== user) 
                 throw setError(403 , "post not found or not has a permission for this process")

@@ -1,6 +1,7 @@
 import Model from "../app/model";
 import BaseRepository from "../plugins/mysqldb";
 import { Options } from "../utils/database";
+import knex from "knex"
 
 export interface IPost extends Model {
     user:number;
@@ -13,12 +14,20 @@ export class PostRepository extends BaseRepository<IPost>{
         super('posts')
     }
 
-    async findMany(query?: Partial<IPost>, option?: Options): Promise<IPost[]> {
+    async findMany(query?: Partial<IPost>, option?: Options): Promise<IPost[] | any> {
         try {
             const posts = this.db(`${this.table} as p`)
             .leftJoin("users as u" , "u.id" , "=" , "p.user")
-            .select("p.*" , "u.username" , "u.first_name" , "u.last_name" , "u.user_img")
-            .where(query!)
+            .leftJoin("likes" , "likes.post" , "=" , "p.id")
+            .select(
+                "p.*" , 
+                "u.username" , 
+                "u.first_name" , 
+                "u.last_name" , 
+                "u.user_img",
+                "likes.user as user_like",
+            )
+            .where({"p.user" : query?.user})
             
             if(option?.others![0] === "true") {
                 posts.orWhereIn("p.user" , 
@@ -33,10 +42,49 @@ export class PostRepository extends BaseRepository<IPost>{
                 )
             }
 
-            return await posts            
+            return await posts         
             .orderBy("p.created_at" , "desc")
             .limit(option?.limit!)
             .offset((option?.offset! - 1) * option?.limit!)
+            .then(r => {
+
+                if(r.length <= 0) return null;
+
+                // const posts = r.map((item:IPost , i:number) => {
+
+                //     const {user_like , obj} = item;
+
+                //     const index = posts.findIndex((p) => p.id === item.id);
+
+                //     if(index > -1) {
+                //         posts[index]['likes'] = [...obj['likes'] , {user: user_like}]
+                //         return
+                //     } else {
+                //         obj['likes'] = [{user: user_like}]
+                //         return obj
+
+                //     }
+                // })
+                const posts = r.reduce((arr:IPost [] , item:any) => {
+                    const {user_like , ...others} = item
+
+                    const index = arr.findIndex((p) => p.id === item.id);
+
+                    if(index > -1) {
+                        if(user_like) arr[index]['likes'] = [...arr[index]['likes'] , {user: user_like}];
+
+                    } else {
+                        const obj = {...others , likes: []}
+
+                        if(user_like)  obj['likes'] = [{user: user_like}]
+                        arr.push(obj)
+                    }
+                
+                    return arr
+                } , [])
+
+                return posts
+            })
 
         } catch (error) {
             throw error
