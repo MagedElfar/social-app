@@ -18,7 +18,7 @@ export default class PostController extends Controller{
             const post = await this.services.createPost({
                 content: req.body?.content,
                 user: req.user?.id!
-            })
+            } , req.body.images)
 
             super.setResponseSuccess({res , status:201 , data:post})
 

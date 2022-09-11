@@ -1,13 +1,25 @@
 import { PostRepository , IPost } from '../model/posts.model'
 import { setError } from "../utils/error-format";
+import PostImageServices from './post-images.services';
 
 export default class PostServices{
     
     private _repository:PostRepository = new PostRepository();
     
-    async createPost(data:IPost):Promise<IPost> {
+    async createPost(data:IPost , files:string [] = []):Promise<IPost> {
         try {
+
+            console.log(files)
             const post = await this._repository.create(data)
+
+            if(files.length > 0) {
+                const imgSrv = new PostImageServices()
+
+                await imgSrv.saveImages(+post.id! , files)
+
+                post.images = files;
+
+            }
 
             return post
         } catch (error) {

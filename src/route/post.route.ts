@@ -1,4 +1,6 @@
 import Controller, { APIRoute , Methods} from '../app/controller';
+import { setRequestArrayFile } from '../middleware/files';
+import Multer from '../middleware/multer';
 import {postValidation , isValidate} from "./../middleware/validators"
 const routes: (controller:Controller) => APIRoute [] = (controller:any) => {
 
@@ -7,7 +9,10 @@ const routes: (controller:Controller) => APIRoute [] = (controller:any) => {
             path: "/",
             method: Methods.POST,
             handler: controller.addPostHandler,
-            localMiddleware:[],
+            localMiddleware:[
+                Multer.localUpload().array("images"),
+                setRequestArrayFile
+            ],
             auth:true
         },
         {

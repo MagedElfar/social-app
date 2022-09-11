@@ -19,12 +19,14 @@ export class PostRepository extends BaseRepository<IPost>{
             const posts = this.db(`${this.table} as p`)
             .leftJoin("users as u" , "u.id" , "=" , "p.user")
             .leftJoin("likes" , "likes.post" , "=" , "p.id")
+            .leftJoin("post_images as pm" , "pm.post" , "=" , "p.id")
             .select(
                 "p.*" , 
                 "u.username" , 
                 "u.first_name" , 
                 "u.last_name" , 
                 "u.user_img",
+                "pm.image as img",
                 "likes.user as user_like",
             )
             .where({"p.user" : query?.user})
@@ -50,33 +52,31 @@ export class PostRepository extends BaseRepository<IPost>{
 
                 if(r.length <= 0) return null;
 
-                // const posts = r.map((item:IPost , i:number) => {
-
-                //     const {user_like , obj} = item;
-
-                //     const index = posts.findIndex((p) => p.id === item.id);
-
-                //     if(index > -1) {
-                //         posts[index]['likes'] = [...obj['likes'] , {user: user_like}]
-                //         return
-                //     } else {
-                //         obj['likes'] = [{user: user_like}]
-                //         return obj
-
-                //     }
-                // })
                 const posts = r.reduce((arr:IPost [] , item:any) => {
-                    const {user_like , ...others} = item
+                    const {user_like , img , ...others} = item
 
                     const index = arr.findIndex((p) => p.id === item.id);
 
                     if(index > -1) {
-                        if(user_like) arr[index]['likes'] = [...arr[index]['likes'] , {user: user_like}];
+                        if(user_like && !arr[index]['likes'].some((item:any) => {
+                            return item?.user === user_like
+                        })) 
+                            arr[index]['likes'] = [...arr[index]['likes'] , {user: user_like}];
+                        if(img && !arr[index]['images'].some((item:string) => {
+                            return item === img
+                        })) 
+                            arr[index]['images'] = [...arr[index]['images'] , img];
 
                     } else {
-                        const obj = {...others , likes: []}
+                        const obj = {
+                            ...others , 
+                            images: [],
+                            likes: []
+                        }
 
                         if(user_like)  obj['likes'] = [{user: user_like}]
+                        if(img) obj['images'] = [img];
+
                         arr.push(obj)
                     }
                 
