@@ -28,6 +28,7 @@ export class PostRepository extends BaseRepository<IPost>{
                 "u.user_img",
                 "pm.image as img",
                 "likes.user as user_like",
+                "pm.id as imgId"
             )
             .where({"p.user" : query?.user})
             
@@ -53,7 +54,7 @@ export class PostRepository extends BaseRepository<IPost>{
                 if(r.length <= 0) return null;
 
                 const posts = r.reduce((arr:IPost [] , item:any) => {
-                    const {user_like , img , ...others} = item
+                    const {user_like , imgId , img , ...others} = item
 
                     const index = arr.findIndex((p) => p.id === item.id);
 
@@ -62,10 +63,13 @@ export class PostRepository extends BaseRepository<IPost>{
                             return item?.user === user_like
                         })) 
                             arr[index]['likes'] = [...arr[index]['likes'] , {user: user_like}];
-                        if(img && !arr[index]['images'].some((item:string) => {
-                            return item === img
+                        if(img && !arr[index]['images'].some((item:any) => {
+                            return item.id === imgId
                         })) 
-                            arr[index]['images'] = [...arr[index]['images'] , img];
+                            arr[index]['images'] = [...arr[index]['images'] , {
+                                id:imgId,
+                                url:img
+                            }];
 
                     } else {
                         const obj = {
@@ -75,7 +79,10 @@ export class PostRepository extends BaseRepository<IPost>{
                         }
 
                         if(user_like)  obj['likes'] = [{user: user_like}]
-                        if(img) obj['images'] = [img];
+                        if(img) obj['images'] = [{
+                            id:imgId,
+                            url:img
+                        }];
 
                         arr.push(obj)
                     }

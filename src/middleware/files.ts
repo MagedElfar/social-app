@@ -11,7 +11,6 @@ export function setRequestSingletFile(req:Request , res:Response , next:NextFunc
 
 export function setRequestArrayFile(req:Request , res:Response , next:NextFunction){
 
-    console.log(req.files)
     if(Array.isArray(req.files)) {
         req.body.images = req.files.map((item:any) => {
             return item?.filename
