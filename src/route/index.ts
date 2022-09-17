@@ -1,5 +1,6 @@
 import Controller from "../app/controller";
 import AuthController from "../controllers/auth.controllers";
+import CommentsController from "../controllers/comment.controllers";
 import Friends from "../controllers/friends.controllers";
 import LikesController from "../controllers/likes.controllers";
 import PostImagesController from "../controllers/post-images.controllers";
@@ -12,7 +13,8 @@ const routes:Controller [] = [
     new Friends("/friends"),
     new PostController("/posts"),
     new LikesController("/likes"),
-    new PostImagesController("/images")
+    new PostImagesController("/images"),
+    new CommentsController("/comments")
 ]
 
 export default routes

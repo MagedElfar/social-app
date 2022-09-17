@@ -45,7 +45,7 @@ export class PostRepository extends BaseRepository<IPost>{
                 )
             }
 
-            return await posts         
+            return await posts        
             .orderBy("p.created_at" , "desc")
             .limit(option?.limit!)
             .offset((option?.offset! - 1) * option?.limit!)

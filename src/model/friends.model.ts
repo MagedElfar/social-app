@@ -48,9 +48,14 @@ export class FriendsRepository extends BaseRepository<IFriend>{
                 )
             }
 
-            return await  friends
+            if(option?.limit) {
+                friends
                 .limit(option?.limit!)
-                .offset((option?.offset! - 1) * option?.limit!)
+                .offset((option?.offset! - 1) * option.limit)
+            }
+
+            return await  friends
+
         } catch (error) {
             throw error
         }
@@ -62,7 +67,7 @@ export class FriendsRepository extends BaseRepository<IFriend>{
 
             if(query.user_1 || query.user_2) {
                 req
-                .whereNot({status :"rejected"})
+                .where({status :"accepted"})
                 .andWhere({user_1:query.user_1 , user_2:query.user_2})
                 .orWhere({user_1:query.user_2 , user_2:query.user_1})
             } else {

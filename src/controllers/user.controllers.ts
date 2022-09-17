@@ -35,7 +35,7 @@ export default class UserController extends Controller{
             if(!user) throw setError(404 , "user not found")
 
             delete user.password
-            super.setResponseSuccess({res , status:200 , data:user})
+            super.setResponseSuccess({res , status:200 , data:{user}})
         } catch (error) {
             next(error)
         }

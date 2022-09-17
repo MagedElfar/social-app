@@ -44,10 +44,21 @@ export class PostImageRepository extends BaseRepository<IPostImage>{
             .leftJoin("posts as p" , "p.id" , "=" , "pm.post")
             .select("pm.*" , "p.user")
             .where("pm.post" , "=" , query?.post!)
+            .andWhere("p.user" , "=" , query?.user!)
+            .orWhereIn("p.user" , 
+                this.db("friends as f").select("f.user_2")
+                .where("f.user_1" , "=" ,query?.user!)
+                .andWhere("status" , "=" , "accepted")
+                .union(
+                    this.db("friends as f2").select("f2.user_1")
+                    .where("f2.user_2" , "=" , query?.user! )
+                    .andWhere("status" , "=" , "accepted")
+                )
+            )
     
             return images
         } catch (error) {
             throw error
         }
     }
-}
+} 
