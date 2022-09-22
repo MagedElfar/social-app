@@ -52,7 +52,29 @@ const commentValidation = [
 
 ]
 
+//room validation
+const createRoomValidation = [    
+    check("type").toLowerCase().matches(/\b(?:private|group)\b/).withMessage('Invalid chat type'),
+    
+    check("users.*").not().isEmpty().isInt().toInt().withMessage("Invalid user Provided, it should be an integer"), 
 
+]
+
+const inviteUserValidation = [    
+    check("users.*").not().isEmpty().isInt().toInt().withMessage("Invalid user Provided, it should be an integer")
+]
+
+//message validation
+const oneToOneValidation = [
+    check("message").not().isEmpty().withMessage("message is required"),
+
+    check("receiver").not().isEmpty().isInt().toInt().withMessage("Invalid user Provided, it should be an integer")
+]
+
+//message validation
+const messageValidation = [
+    check("message").not().isEmpty().withMessage("message is required"),
+]
 
 //check validation
 const isValidate = (req:Request , res:Response , next:NextFunction) => {
@@ -85,5 +107,9 @@ export {
     updateFriendRequest,
     postValidation,
     likeValidation,
-    commentValidation
+    commentValidation,
+    createRoomValidation,
+    inviteUserValidation,
+    oneToOneValidation,
+    messageValidation
 }  

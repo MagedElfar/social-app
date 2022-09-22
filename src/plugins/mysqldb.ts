@@ -55,7 +55,7 @@ export default abstract class BaseRepository<T> extends DBRepository<T> {
         }
     }
 
-    async createMany(items:T[] | string []):Promise<void>{
+    async createMany(items:T[]):Promise<void>{
         try {
             await this.db(this.table).insert(items);
             return;
