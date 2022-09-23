@@ -11,7 +11,7 @@ export default abstract class BaseRepository<T> extends DBRepository<T> {
         this.db = db;
     }
 
-    async findMany(query: Partial<T> = {} , option?:Options , search?:string):Promise<T[]>{
+    async findMany(query: Partial<T> = {} , option?:Options , search?:string):Promise<any>{
         try {
             const data = await this.db(this.table).where(query)
 

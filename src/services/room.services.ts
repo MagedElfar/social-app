@@ -148,21 +148,17 @@ class GroupConversationServices extends ConversationServices{
 
             let room = await roomRep.findOne({users , type: "group"})
 
-            console.log(room)
+            const roomMember:RoomMemberRepository = new RoomMemberRepository();
 
-            // if(room) throw setError(400 , "room is exist")
+            room = await roomRep.create({type: "group"});
 
-            // const roomMember:RoomMemberRepository = new RoomMemberRepository();
+            const members:IRoomMember [] = users.map((user:number) => {
+                return {room: +room.id! , user}
+            })
 
-            // room = await roomRep.create({type: "group"});
+            await roomMember.createMany(members)
 
-            // const members:IRoomMember [] = users.map((user:number) => {
-            //     return {room: +room.id! , user}
-            // })
-
-            // await roomMember.createMany(members)
-
-            // room = await roomRep.findOne({users , type: "group"})
+            room = await roomRep.findOne({id: room.id})
 
             return room;
 

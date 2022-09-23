@@ -21,9 +21,12 @@ export class FriendsRepository extends BaseRepository<IFriend>{
         super('friends')
     }
 
-    async findMany(query?: Partial<IFriend>, option?: Options , search?:string): Promise<IFriend[]> {
+    async findMany(query?: Partial<IFriend>, option?: Options , search?:string): Promise<{
+        friends: IFriend[],
+        count: number
+    }> {
         try {
-            let friends = this.db("friends as f")
+            let friendsQuery = this.db("friends as f")
             .leftJoin("users as u1" , "u1.id" , "=" , "f.user_1")
             .select("f.id" ,  "f.user_1  as user" , "u1.username as username" , "u1.first_name as first_name" , "u1.last_name as last_name")
             .where({status: query?.status , user_2:query?.user_1})
@@ -35,7 +38,7 @@ export class FriendsRepository extends BaseRepository<IFriend>{
             })
 
             if(query?.status === "accepted") {
-                friends.union(
+                friendsQuery.union(
                     this.db("friends as f2")
                     .where({status: query?.status , user_1:query?.user_1})
                     .leftJoin("users as u2" , "u2.id" , "=" , "f2.user_2")
@@ -48,13 +51,23 @@ export class FriendsRepository extends BaseRepository<IFriend>{
                 )
             }
 
-            if(option?.limit) {
-                friends
-                .limit(option?.limit!)
-                .offset((option?.offset! - 1) * option.limit)
-            }
+            const count = await friendsQuery
 
-            return await  friends
+
+            const friends = await friendsQuery
+            .limit(option?.limit!)
+            .offset((option?.offset! - 1) * option?.limit!)
+
+            
+
+            // const count = await friendsQuery
+            // .count('CNT').first();
+
+
+            return {
+                count: count.length , //+count?.CNT!,
+                friends,
+            };
 
         } catch (error) {
             throw error

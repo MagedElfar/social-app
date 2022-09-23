@@ -20,7 +20,7 @@ export default class FriendsController extends Controller{
 
             const {status = "accepted"} = req.query
 
-            const friends:IFriend[] = await this.services.getFriends(
+            const friends = await this.services.getFriends(
                 status.toString() ,
                 req.user?.id!,
                 search.toString() , 

@@ -77,7 +77,7 @@ export default class RoomRepository extends BaseRepository<IRoom>{
             .leftJoin("users as u" , "u.id" , "=" , "rm.user")
             .select("r.*" , "u.id as userId" , "u.username" , "u.first_name" , "u.last_name" , "u.user_img")
             
-            if(query?.users) {
+            if(query?.users && query.type === "private") {
                 roomQuery
                 .where("r.type" , "=" , query.type)
                 .whereIn("rm.user" , query.users )
